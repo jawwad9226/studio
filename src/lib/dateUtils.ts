@@ -8,7 +8,7 @@ export const getYesterdayDateString = (): string => {
   return format(subDays(new Date(), 1), 'yyyy-MM-dd');
 };
 
-export constformatDate = (date: Date): string => {
+export const formatDate = (date: Date): string => {
   return format(date, 'yyyy-MM-dd');
 };
 
