@@ -68,7 +68,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[525px] bg-card text-card-foreground flex flex-col max-h-[85vh]">
+      <DialogContent className="sm:max-w-[525px] bg-card text-card-foreground flex flex-col max-h-[80vh]">
         <DialogHeader className="px-6 pt-6 shrink-0">
           <DialogTitle className="font-headline text-xl sm:text-2xl">Manage Habits</DialogTitle>
         </DialogHeader>
@@ -112,11 +112,10 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </div>
         </div>
 
-        {/* Scrollable area for current habits. Added overflow-hidden to this wrapper. */}
-        <div className="flex-1 px-6 py-4 min-h-0 overflow-hidden"> 
+        {/* Scrollable Area Wrapper */}
+        <div className="flex-1 min-h-0"> {/* NO PADDING HERE */}
           <ScrollArea className="h-full w-full"> 
-            {/* Single div child for ScrollArea to help with layout calculation */}
-            <div>
+            <div className="px-6 py-4"> {/* PADDING MOVED HERE, INSIDE SCROLLAREA'S CHILD */}
               <h3 className="text-lg font-semibold mb-3 font-headline">Current Habits</h3>
               <div className="space-y-3">
                 {tasks.map((task) => (
