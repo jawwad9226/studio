@@ -48,7 +48,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#64B5F6" />
-        <link rel="apple-touch-icon" href="https://placehold.co/180x180.png" data-ai-hint="app icon" />
+        <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
         {/* You would replace these with actual icon files in /public */}
         {/* <link rel="shortcut icon" href="/favicon.ico" /> */}
       </head>
