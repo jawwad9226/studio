@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
@@ -17,21 +18,13 @@ export const HabitProvider = ({ children }: { children: ReactNode }) => {
   const [habitLog, setHabitLog] = useLocalStorage<HabitLog>(HABITLOG_STORAGE_KEY, {});
   const [currentStreak, setCurrentStreak] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [isInitialLoadTasks, setIsInitialLoadTasks] = useState(true);
-  const [isInitialLoadLog, setIsInitialLoadLog] = useState(true);
 
   useEffect(() => {
-    if (tasks !== undefined && isInitialLoadTasks) {
-      setIsInitialLoadTasks(false);
-    }
-    if (habitLog !== undefined && isInitialLoadLog) {
-      setIsInitialLoadLog(false);
-    }
-    if (tasks !== undefined && habitLog !== undefined && (!isInitialLoadTasks || !isInitialLoadLog)) {
-      setIsLoading(false);
-    }
-  }, [tasks, habitLog, isInitialLoadTasks, isInitialLoadLog]);
-  
+    // This effect runs once after the initial render and after
+    // useLocalStorage has had a chance to load data from localStorage.
+    setIsLoading(false);
+  }, []); // Empty dependency array ensures this runs once on mount client-side
+
   useEffect(() => {
     if (!isLoading) {
       const today = getTodayDateString();
