@@ -115,7 +115,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </div>
 
           <h3 className="text-lg font-semibold mb-2 font-headline p-1">Current Habits</h3>
-          <ScrollArea className="flex-grow pr-3"> {/* Ensure ScrollArea can grow */}
+          <ScrollArea className="flex-grow pr-3 min-h-0"> {/* Added min-h-0 here */}
             <div className="space-y-3">
               {tasks.map((task) => (
                 <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
