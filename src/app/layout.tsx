@@ -52,21 +52,21 @@ export default function RootLayout({
         {/* You would replace these with actual icon files in /public */}
         {/* <link rel="shortcut icon" href="/favicon.ico" /> */}
       </head>
-      {/* Service worker registration */}
-      <script>{`
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-              .then((reg) => {
-                console.log('Service worker registered.', reg);
-              })
-              .catch((err) => {
-                console.error('Service worker registration failed:', err);
-              });
-          });
-        }
-      `}</script>
       <body className="font-body antialiased">
+        {/* Service worker registration */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/sw.js')
+                .then((reg) => {
+                  console.log('Service worker registered.', reg);
+                })
+                .catch((err) => {
+                  console.error('Service worker registration failed:', err);
+                });
+            });
+          }
+        `}} />
         <HabitProvider>
           <Header />
           <main className="flex-grow container mx-auto p-4 sm:p-6">
@@ -78,3 +78,4 @@ export default function RootLayout({
     </html>
   );
 }
+
