@@ -74,7 +74,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           <DialogTitle className="font-headline text-2xl">Manage Habits</DialogTitle>
         </DialogHeader>
         
-        <div className="py-4 flex-grow overflow-hidden flex flex-col min-h-0"> {/* Added min-h-0 here */}
+        <div className="py-4 flex-grow overflow-hidden flex flex-col min-h-0">
           <div className="mb-6 p-1">
             <h3 className="text-lg font-semibold mb-2 font-headline">Add New Habit</h3>
             <div className="flex items-end space-x-2">
@@ -115,7 +115,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </div>
 
           <h3 className="text-lg font-semibold mb-2 font-headline p-1">Current Habits</h3>
-          <ScrollArea className="flex-grow pr-3">
+          <ScrollArea className="flex-grow pr-3"> {/* Ensure ScrollArea can grow */}
             <div className="space-y-3">
               {tasks.map((task) => (
                 <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
@@ -168,6 +168,9 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                   )}
                 </div>
               ))}
+              {tasks.length === 0 && (
+                <p className="text-center text-muted-foreground py-4">No habits added yet.</p>
+              )}
             </div>
           </ScrollArea>
         </div>

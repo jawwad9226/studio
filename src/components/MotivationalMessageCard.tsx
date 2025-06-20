@@ -25,7 +25,7 @@ export const MotivationalMessageCard: React.FC = () => {
       const randomIndex = Math.floor(Math.random() * motivationalMessages.length);
       setDisplayMessage(motivationalMessages[randomIndex]);
     }
-  }, [habitsLoading, tasks.length]);
+  }, [habitsLoading, tasks.length]); // Removed currentStreak from dependencies
 
 
   return (
