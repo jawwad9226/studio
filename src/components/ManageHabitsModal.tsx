@@ -8,11 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
+// ScrollArea import is removed for this attempt
 import { Pencil, Trash2, PlusCircle, Save } from 'lucide-react';
 import LucideIconRenderer from './icons/LucideIconRenderer';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area'; // Keep for icon selection if needed
 
 const availableIcons = [
   "Activity", "Anchor", "Award", "Atom", "Bike", "BookOpenCheck", "Brain", "Briefcase", "Brush",
@@ -68,7 +69,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[525px] bg-card text-card-foreground flex flex-col max-h-[80vh]">
+      <DialogContent className="sm:max-w-[525px] bg-card text-card-foreground flex flex-col max-h-[85vh]">
         <DialogHeader className="px-6 pt-6 shrink-0">
           <DialogTitle className="font-headline text-xl sm:text-2xl">Manage Habits</DialogTitle>
         </DialogHeader>
@@ -112,69 +113,65 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </div>
         </div>
 
-        {/* Scrollable Area Wrapper */}
-        <div className="flex-1 min-h-0"> {/* THIS DIV IS KEY */}
-          <ScrollArea className="h-full w-full"> 
-            <div className="px-6 py-4"> {/* PADDING MOVED HERE, INSIDE SCROLLAREA'S CHILD */}
-              <h3 className="text-lg font-semibold mb-3 font-headline">Current Habits</h3>
-              <div className="space-y-3">
-                {tasks.map((task) => (
-                  <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
-                    {editingTask && editingTask.id === task.id ? (
-                      <div className="space-y-2">
-                        <Input
-                          value={editingTask.name}
-                          onChange={(e) => setEditingTask({ ...editingTask, name: e.target.value })}
-                          className="bg-background text-base sm:text-sm"
-                        />
-                        <Select value={editingTask.iconName} onValueChange={(value) => setEditingTask({...editingTask, iconName: value })}>
-                          <SelectTrigger className="w-full bg-background text-base sm:text-sm">
-                              <SelectValue placeholder="Select icon" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <ScrollArea className="h-[200px]">
-                            {availableIcons.map(icon => (
-                              <SelectItem key={icon} value={icon} className="text-sm">
-                                <div className="flex items-center">
-                                  <LucideIconRenderer name={icon} className="w-4 h-4 mr-2" />
-                                  {icon}
-                                </div>
-                              </SelectItem>
-                            ))}
-                            </ScrollArea>
-                          </SelectContent>
-                        </Select>
-                        <div className="flex justify-end space-x-2">
-                          <Button onClick={handleUpdateTask} size="sm" className="bg-primary hover:bg-primary/90 text-sm">
-                            <Save className="w-4 h-4 mr-1" /> Save
-                          </Button>
-                          <Button variant="outline" size="sm" onClick={() => setEditingTask(null)} className="text-sm">Cancel</Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <LucideIconRenderer name={task.iconName} className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                          <span className="text-base sm:text-lg">{task.name}</span>
-                        </div>
-                        <div className="space-x-1 sm:space-x-2">
-                          <Button variant="ghost" size="icon" onClick={() => startEdit(task)} aria-label={`Edit ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
-                            <Pencil className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-primary" />
-                          </Button>
-                          <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} aria-label={`Delete ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
-                            <Trash2 className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-destructive" />
-                          </Button>
-                        </div>
-                      </div>
-                    )}
+        {/* Scrollable container for "Current Habits" list using direct CSS overflow */}
+        <div className="flex-1 px-6 py-4 min-h-0 overflow-y-auto">
+          <h3 className="text-lg font-semibold mb-3 font-headline sticky top-0 bg-card py-2 -my-2 z-10">Current Habits</h3>
+          <div className="space-y-3 pt-2">
+            {tasks.map((task) => (
+              <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
+                {editingTask && editingTask.id === task.id ? (
+                  <div className="space-y-2">
+                    <Input
+                      value={editingTask.name}
+                      onChange={(e) => setEditingTask({ ...editingTask, name: e.target.value })}
+                      className="bg-background text-base sm:text-sm"
+                    />
+                     <Select value={editingTask.iconName} onValueChange={(value) => setEditingTask({...editingTask, iconName: value })}>
+                      <SelectTrigger className="w-full bg-background text-base sm:text-sm">
+                          <SelectValue placeholder="Select icon" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <ScrollArea className="h-[200px]">
+                        {availableIcons.map(icon => (
+                          <SelectItem key={icon} value={icon} className="text-sm">
+                            <div className="flex items-center">
+                              <LucideIconRenderer name={icon} className="w-4 h-4 mr-2" />
+                              {icon}
+                            </div>
+                          </SelectItem>
+                        ))}
+                        </ScrollArea>
+                      </SelectContent>
+                    </Select>
+                    <div className="flex justify-end space-x-2">
+                      <Button onClick={handleUpdateTask} size="sm" className="bg-primary hover:bg-primary/90 text-sm">
+                        <Save className="w-4 h-4 mr-1" /> Save
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => setEditingTask(null)} className="text-sm">Cancel</Button>
+                    </div>
                   </div>
-                ))}
-                {tasks.length === 0 && (
-                  <p className="text-center text-muted-foreground py-4 text-sm sm:text-base">No habits added yet.</p>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <LucideIconRenderer name={task.iconName} className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                      <span className="text-base sm:text-lg">{task.name}</span>
+                    </div>
+                    <div className="space-x-1 sm:space-x-2">
+                      <Button variant="ghost" size="icon" onClick={() => startEdit(task)} aria-label={`Edit ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
+                        <Pencil className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-primary" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} aria-label={`Delete ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
+                        <Trash2 className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
                 )}
               </div>
-            </div>
-          </ScrollArea>
+            ))}
+            {tasks.length === 0 && (
+              <p className="text-center text-muted-foreground py-4 text-sm sm:text-base">No habits added yet.</p>
+            )}
+          </div>
         </div>
 
         <DialogFooter className="px-6 pb-6 pt-4 border-t shrink-0">
@@ -186,6 +183,3 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
     </Dialog>
   );
 };
-    
-
-    
