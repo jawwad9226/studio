@@ -1,0 +1,28 @@
+
+export const motivationalMessages: string[] = [
+  "Great things never come from comfort zones. Keep pushing!",
+  "The only way to do great work is to love what you do. Find joy in your habits!",
+  "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+  "Believe you can and you're halfway there.",
+  "Your limitation—it's only your imagination.",
+  "Push yourself, because no one else is going to do it for you.",
+  "Sometimes later becomes never. Do it now.",
+  "Dream it. Wish it. Do it.",
+  "Success doesn’t just find you. You have to go out and get it.",
+  "The harder you work for something, the greater you’ll feel when you achieve it.",
+  "Dream bigger. Do bigger.",
+  "Don’t stop when you’re tired. Stop when you’re done.",
+  "Wake up with determination. Go to bed with satisfaction.",
+  "Do something today that your future self will thank you for.",
+  "Little by little, a little becomes a lot.",
+  "It’s going to be hard, but hard does not mean impossible.",
+  "Don’t wait for opportunity. Create it.",
+  "The key to success is to focus on goals, not obstacles.",
+  "You’ve got to get up every morning with determination if you’re going to go to bed with satisfaction.",
+  "Well done is better than well said. Keep up the consistent effort!",
+  "Every habit makes you. Choose good ones.",
+  "Consistency is what transforms average into excellence.",
+  "Your daily habits are the building blocks of your destiny.",
+  "Focus on progress, not perfection. Each step forward counts.",
+  "The journey of a thousand miles begins with a single step. Keep going!"
+];

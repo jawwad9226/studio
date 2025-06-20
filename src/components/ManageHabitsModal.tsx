@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -73,7 +74,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           <DialogTitle className="font-headline text-2xl">Manage Habits</DialogTitle>
         </DialogHeader>
         
-        <div className="py-4 flex-grow overflow-hidden flex flex-col">
+        <div className="py-4 flex-grow overflow-hidden flex flex-col min-h-0"> {/* Added min-h-0 here */}
           <div className="mb-6 p-1">
             <h3 className="text-lg font-semibold mb-2 font-headline">Add New Habit</h3>
             <div className="flex items-end space-x-2">

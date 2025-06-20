@@ -1,60 +1,32 @@
+
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHabits } from '@/context/HabitContext';
-import { getMotivationalMessageAction } from '@/app/actions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Lightbulb } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
-import { useToast } from '@/hooks/use-toast';
+import { motivationalMessages } from '@/lib/motivationalMessages';
 
 export const MotivationalMessageCard: React.FC = () => {
-  const { tasks, isLoading: habitsLoading, getHistoricalDataForAI, getTodayCompletionStatusForAI, currentStreak } = useHabits();
-  const [message, setMessage] = useState<string>('');
-  const [isFetchingMessage, setIsFetchingMessage] = useState<boolean>(false);
-  const { toast } = useToast();
+  const { tasks, isLoading: habitsLoading, currentStreak } = useHabits();
+  const [displayMessage, setDisplayMessage] = useState<string>("Loading motivation...");
 
-  const fetchMessage = useCallback(async () => {
-    if (habitsLoading || tasks.length === 0) {
-      setMessage("Set up your habits to get personalized motivation!");
+  useEffect(() => {
+    if (habitsLoading) {
+      // Skeleton will be shown, but we can set a placeholder
+      setDisplayMessage("Analyzing your awesome progress...");
       return;
     }
 
-    setIsFetchingMessage(true);
-    try {
-      const completionStatus = getTodayCompletionStatusForAI();
-      const historicalData = getHistoricalDataForAI(7); // Get last 7 days of history
-
-      const aiInput = { completionStatus, historicalData };
-      const result = await getMotivationalMessageAction(aiInput);
-      setMessage(result.message);
-    } catch (error) {
-      console.error("Failed to fetch motivational message:", error);
-      setMessage("Remember why you started. You've got this!"); // Fallback message
-      toast({
-        title: "Motivation Error",
-        description: "Could not fetch a personalized message. Using a default one.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsFetchingMessage(false);
+    if (tasks.length === 0) {
+      setDisplayMessage("Set up your habits to get personalized motivation!");
+    } else {
+      // This part runs client-side due to Math.random()
+      const randomIndex = Math.floor(Math.random() * motivationalMessages.length);
+      setDisplayMessage(motivationalMessages[randomIndex]);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [habitsLoading, tasks, getHistoricalDataForAI, getTodayCompletionStatusForAI, toast, currentStreak]); // currentStreak dependency to refresh message on streak change
-
-
-  useEffect(() => {
-    fetchMessage();
-  }, [fetchMessage]);
-  
-  // Debounce or throttle this if it fires too often due to rapid task toggling.
-  // For now, it re-fetches when completion status or history effectively changes via currentStreak.
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      fetchMessage();
-    }, 1000); // Refetch message if streak changes, with a small delay
-    return () => clearTimeout(timeoutId);
-  }, [currentStreak, fetchMessage]);
+  }, [habitsLoading, tasks.length, currentStreak]); // Re-pick message if habits load, tasks change, or streak changes
 
 
   return (
@@ -66,14 +38,14 @@ export const MotivationalMessageCard: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="text-center">
-        {isFetchingMessage || habitsLoading ? (
+        {habitsLoading ? (
           <div className="space-y-2">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-5/6 mx-auto" />
             <Skeleton className="h-4 w-4/6 mx-auto" />
           </div>
         ) : (
-          <p className="text-lg italic text-foreground/90 leading-relaxed">&quot;{message}&quot;</p>
+          <p className="text-lg italic text-foreground/90 leading-relaxed">&quot;{displayMessage}&quot;</p>
         )}
       </CardContent>
     </Card>
