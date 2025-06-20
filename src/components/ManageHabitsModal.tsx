@@ -12,8 +12,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Pencil, Trash2, PlusCircle, Save } from 'lucide-react';
 import LucideIconRenderer from './icons/LucideIconRenderer';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from '@/lib/utils';
 
-// A selection of commonly used Lucide icons appropriate for habits
 const availableIcons = [
   "Activity", "Anchor", "Award", "Atom", "Bike", "BookOpenCheck", "Brain", "Briefcase", "Brush",
   "CalendarCheck", "Camera", "CheckCircle2", "ClipboardCheck", "CloudSun", "Code2", "Coffee",
@@ -28,7 +28,6 @@ const availableIcons = [
   "Tent", "Terminal", "ThumbsUp", "Timer", "ToggleRight", "Trash2", "TrendingUp", "Trophy",
   "Umbrella", "Users2", "Video", "Wallet2", "Watch", "Wifi", "Wind", "Wrench", "Zap"
 ];
-
 
 interface ManageHabitsModalProps {
   isOpen: boolean;
@@ -74,29 +73,30 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           <DialogTitle className="font-headline text-xl sm:text-2xl">Manage Habits</DialogTitle>
         </DialogHeader>
         
-        <div className="mb-4 p-1 shrink-0">
+        {/* Add New Habit Section */}
+        <div className="p-1 shrink-0 border-b pb-4 mb-4">
           <h3 className="text-lg font-semibold mb-2 font-headline">Add New Habit</h3>
           <div className="flex flex-col sm:flex-row sm:items-end space-y-2 sm:space-y-0 sm:space-x-2">
             <div className="flex-grow">
-              <Label htmlFor="new-task-name">Habit Name</Label>
+              <Label htmlFor="new-task-name" className="text-sm">Habit Name</Label>
               <Input
                 id="new-task-name"
                 value={newTaskName}
                 onChange={(e) => setNewTaskName(e.target.value)}
                 placeholder="e.g., Morning Exercise"
-                className="bg-background"
+                className="bg-background text-base sm:text-sm"
               />
             </div>
-            <div className="w-full sm:w-[180px]">
-              <Label htmlFor="new-task-icon">Icon</Label>
+            <div className="w-full sm:w-auto sm:min-w-[160px]">
+              <Label htmlFor="new-task-icon" className="text-sm">Icon</Label>
                 <Select value={newTaskIcon} onValueChange={setNewTaskIcon}>
-                <SelectTrigger className="w-full bg-background">
+                <SelectTrigger className="w-full bg-background text-base sm:text-sm">
                   <SelectValue placeholder="Select icon" />
                 </SelectTrigger>
                 <SelectContent>
                   <ScrollArea className="h-[200px]">
                   {availableIcons.map(icon => (
-                    <SelectItem key={icon} value={icon}>
+                    <SelectItem key={icon} value={icon} className="text-sm">
                       <div className="flex items-center">
                         <LucideIconRenderer name={icon} className="w-4 h-4 mr-2" />
                         {icon}
@@ -107,16 +107,16 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleAddTask} size="icon" aria-label="Add habit" className="bg-primary hover:bg-primary/90 shrink-0 self-end sm:self-auto">
+            <Button onClick={handleAddTask} size="icon" aria-label="Add habit" className="bg-primary hover:bg-primary/90 shrink-0 self-end sm:self-auto h-10 w-10">
               <PlusCircle className="h-5 w-5" />
             </Button>
           </div>
         </div>
 
         {/* Current Habits Section - This part scrolls */}
-        <div className="flex-grow flex flex-col min-h-0">
+        <div className="flex-grow flex flex-col min-h-0"> {/* This container will grow and allow ScrollArea to work */}
           <h3 className="text-lg font-semibold mb-2 font-headline p-1 shrink-0">Current Habits</h3>
-          <ScrollArea className="flex-1 pr-1"> {/* Ensure ScrollArea can grow */}
+          <ScrollArea className="flex-1 pr-1"> {/* ScrollArea grows to fill its parent */}
             <div className="space-y-3 p-1">
               {tasks.map((task) => (
                 <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
@@ -125,16 +125,16 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                       <Input
                         value={editingTask.name}
                         onChange={(e) => setEditingTask({ ...editingTask, name: e.target.value })}
-                        className="bg-background"
+                        className="bg-background text-base sm:text-sm"
                       />
                       <Select value={editingTask.iconName} onValueChange={(value) => setEditingTask({...editingTask, iconName: value })}>
-                        <SelectTrigger className="w-full bg-background">
+                        <SelectTrigger className="w-full bg-background text-base sm:text-sm">
                             <SelectValue placeholder="Select icon" />
                         </SelectTrigger>
                         <SelectContent>
                           <ScrollArea className="h-[200px]">
                           {availableIcons.map(icon => (
-                            <SelectItem key={icon} value={icon}>
+                            <SelectItem key={icon} value={icon} className="text-sm">
                               <div className="flex items-center">
                                 <LucideIconRenderer name={icon} className="w-4 h-4 mr-2" />
                                 {icon}
@@ -145,24 +145,24 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                         </SelectContent>
                       </Select>
                       <div className="flex justify-end space-x-2">
-                        <Button onClick={handleUpdateTask} size="sm" className="bg-primary hover:bg-primary/90">
+                        <Button onClick={handleUpdateTask} size="sm" className="bg-primary hover:bg-primary/90 text-sm">
                           <Save className="w-4 h-4 mr-1" /> Save
                         </Button>
-                        <Button variant="outline" size="sm" onClick={() => setEditingTask(null)}>Cancel</Button>
+                        <Button variant="outline" size="sm" onClick={() => setEditingTask(null)} className="text-sm">Cancel</Button>
                       </div>
                     </div>
                   ) : (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <LucideIconRenderer name={task.iconName} className="w-6 h-6 text-primary" />
-                        <span className="text-base">{task.name}</span>
+                        <LucideIconRenderer name={task.iconName} className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                        <span className="text-base sm:text-lg">{task.name}</span>
                       </div>
-                      <div className="space-x-2">
-                        <Button variant="ghost" size="icon" onClick={() => startEdit(task)} aria-label={`Edit ${task.name}`}>
-                          <Pencil className="h-5 w-5 text-muted-foreground hover:text-primary" />
+                      <div className="space-x-1 sm:space-x-2">
+                        <Button variant="ghost" size="icon" onClick={() => startEdit(task)} aria-label={`Edit ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
+                          <Pencil className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-primary" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} aria-label={`Delete ${task.name}`}>
-                          <Trash2 className="h-5 w-5 text-muted-foreground hover:text-destructive" />
+                        <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} aria-label={`Delete ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
+                          <Trash2 className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-destructive" />
                         </Button>
                       </div>
                     </div>
@@ -170,15 +170,15 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                 </div>
               ))}
               {tasks.length === 0 && (
-                <p className="text-center text-muted-foreground py-4">No habits added yet.</p>
+                <p className="text-center text-muted-foreground py-4 text-sm sm:text-base">No habits added yet.</p>
               )}
             </div>
           </ScrollArea>
         </div>
 
-        <DialogFooter className="shrink-0 mt-4">
+        <DialogFooter className="shrink-0 mt-auto border-t pt-4">
           <DialogClose asChild>
-            <Button variant="outline" onClick={onClose}>Close</Button>
+            <Button variant="outline" onClick={onClose} className="text-sm sm:text-base">Close</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
