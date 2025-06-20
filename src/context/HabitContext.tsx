@@ -20,10 +20,8 @@ export const HabitProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // This effect runs once after the initial render and after
-    // useLocalStorage has had a chance to load data from localStorage.
     setIsLoading(false);
-  }, []); // Empty dependency array ensures this runs once on mount client-side
+  }, []);
 
   useEffect(() => {
     if (!isLoading) {
@@ -43,7 +41,6 @@ export const HabitProvider = ({ children }: { children: ReactNode }) => {
 
   const deleteTask = useCallback((id: string) => {
     setTasks(prevTasks => (prevTasks || []).filter(task => task.id !== id));
-    // Optionally, remove task from habitLog history, or keep it for historical accuracy
   }, [setTasks]);
 
   const toggleTaskCompletion = useCallback((taskId: string, date: string) => {
@@ -64,6 +61,23 @@ export const HabitProvider = ({ children }: { children: ReactNode }) => {
   const isDayComplete = useCallback((date: string): boolean => {
     return isDayCompleteUtil(date, habitLog, tasks || []);
   }, [habitLog, tasks]);
+  
+  const reorderTasks = useCallback((sourceTaskId: string, targetTaskId: string) => {
+    setTasks(prevTasks => {
+      const currentTasks = Array.isArray(prevTasks) ? prevTasks : [];
+      const sourceIndex = currentTasks.findIndex(task => task.id === sourceTaskId);
+      const targetIndex = currentTasks.findIndex(task => task.id === targetTaskId);
+
+      if (sourceIndex === -1 || targetIndex === -1 ) { // Allow dropping on itself to simplify logic, no actual change
+        return currentTasks;
+      }
+      
+      const updatedTasks = Array.from(currentTasks);
+      const [movedTask] = updatedTasks.splice(sourceIndex, 1);
+      updatedTasks.splice(targetIndex, 0, movedTask);
+      return updatedTasks;
+    });
+  }, [setTasks]);
 
   const getHistoricalDataForAI = useCallback((numberOfDays: number): boolean[][] => {
     if (isLoading || !tasks || tasks.length === 0) return [];
@@ -72,8 +86,8 @@ export const HabitProvider = ({ children }: { children: ReactNode }) => {
     for (let i = 1; i <= numberOfDays; i++) {
       const date = subDays(today, i);
       const dateString = formatDate(date);
-      const dayCompletion: boolean[] = tasks.map(task => getTaskCompletion(task.id, dateString));
-      history.unshift(dayCompletion); // Add to beginning to keep chronological order for AI (oldest first)
+      const dayCompletion: boolean[] = (tasks || []).map(task => getTaskCompletion(task.id, dateString));
+      history.unshift(dayCompletion); 
     }
     return history;
   }, [tasks, getTaskCompletion, isLoading]);
@@ -81,7 +95,7 @@ export const HabitProvider = ({ children }: { children: ReactNode }) => {
   const getTodayCompletionStatusForAI = useCallback((): boolean[] => {
     if (isLoading || !tasks || tasks.length === 0) return [];
     const todayString = getTodayDateString();
-    return tasks.map(task => getTaskCompletion(task.id, todayString));
+    return (tasks || []).map(task => getTaskCompletion(task.id, todayString));
   }, [tasks, getTaskCompletion, isLoading]);
 
 
@@ -97,6 +111,7 @@ export const HabitProvider = ({ children }: { children: ReactNode }) => {
       getTaskCompletion,
       isDayComplete,
       isLoading,
+      reorderTasks,
       getHistoricalDataForAI,
       getTodayCompletionStatusForAI
     }}>
@@ -112,3 +127,5 @@ export const useHabits = (): HabitContextType => {
   }
   return context;
 };
+
+    

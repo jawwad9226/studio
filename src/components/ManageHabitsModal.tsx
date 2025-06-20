@@ -1,19 +1,18 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHabits } from '@/context/HabitContext';
 import type { Task } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
-// ScrollArea import is removed for this attempt
-import { Pencil, Trash2, PlusCircle, Save } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Pencil, Trash2, PlusCircle, Save, GripVertical } from 'lucide-react';
 import LucideIconRenderer from './icons/LucideIconRenderer';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area'; // Keep for icon selection if needed
 
 const availableIcons = [
   "Activity", "Anchor", "Award", "Atom", "Bike", "BookOpenCheck", "Brain", "Briefcase", "Brush",
@@ -36,10 +35,14 @@ interface ManageHabitsModalProps {
 }
 
 export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, onClose }) => {
-  const { tasks, addTask, updateTask, deleteTask } = useHabits();
+  const { tasks, addTask, updateTask, deleteTask, reorderTasks } = useHabits();
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [newTaskName, setNewTaskName] = useState('');
   const [newTaskIcon, setNewTaskIcon] = useState(availableIcons[0]);
+
+  const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
+  const [dragOverItemId, setDragOverItemId] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (isOpen) {
@@ -66,6 +69,39 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
   const startEdit = (task: Task) => {
     setEditingTask({ ...task });
   };
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, taskId: string) => {
+    e.dataTransfer.setData("application/habit-id", taskId);
+    e.dataTransfer.effectAllowed = "move";
+    setDraggedItemId(taskId);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, targetTaskId: string) => {
+    e.preventDefault(); // Necessary to allow dropping
+    if (draggedItemId !== targetTaskId) {
+        setDragOverItemId(targetTaskId);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setDragOverItemId(null);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetTaskId: string) => {
+    e.preventDefault();
+    const sourceTaskId = e.dataTransfer.getData("application/habit-id");
+    if (sourceTaskId && sourceTaskId !== targetTaskId) {
+      reorderTasks(sourceTaskId, targetTaskId);
+    }
+    setDraggedItemId(null);
+    setDragOverItemId(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItemId(null);
+    setDragOverItemId(null);
+  };
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -113,65 +149,82 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </div>
         </div>
 
-        {/* Scrollable container for "Current Habits" list using direct CSS overflow */}
-        <div className="flex-1 px-6 py-4 min-h-0 overflow-y-auto">
-          <h3 className="text-lg font-semibold mb-3 font-headline sticky top-0 bg-card py-2 -my-2 z-10">Current Habits</h3>
-          <div className="space-y-3 pt-2">
-            {tasks.map((task) => (
-              <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
-                {editingTask && editingTask.id === task.id ? (
-                  <div className="space-y-2">
-                    <Input
-                      value={editingTask.name}
-                      onChange={(e) => setEditingTask({ ...editingTask, name: e.target.value })}
-                      className="bg-background text-base sm:text-sm"
-                    />
-                     <Select value={editingTask.iconName} onValueChange={(value) => setEditingTask({...editingTask, iconName: value })}>
-                      <SelectTrigger className="w-full bg-background text-base sm:text-sm">
-                          <SelectValue placeholder="Select icon" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <ScrollArea className="h-[200px]">
-                        {availableIcons.map(icon => (
-                          <SelectItem key={icon} value={icon} className="text-sm">
-                            <div className="flex items-center">
-                              <LucideIconRenderer name={icon} className="w-4 h-4 mr-2" />
-                              {icon}
-                            </div>
-                          </SelectItem>
-                        ))}
-                        </ScrollArea>
-                      </SelectContent>
-                    </Select>
-                    <div className="flex justify-end space-x-2">
-                      <Button onClick={handleUpdateTask} size="sm" className="bg-primary hover:bg-primary/90 text-sm">
-                        <Save className="w-4 h-4 mr-1" /> Save
-                      </Button>
-                      <Button variant="outline" size="sm" onClick={() => setEditingTask(null)} className="text-sm">Cancel</Button>
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+          <h3 className="text-lg font-semibold mb-3 font-headline px-6 pt-4 shrink-0">Current Habits</h3>
+          <ScrollArea className="flex-1 px-6 pb-4">
+            <div className="space-y-3">
+              {tasks.map((task) => (
+                <div 
+                  key={task.id} 
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, task.id)}
+                  onDragOver={(e) => handleDragOver(e, task.id)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, task.id)}
+                  onDragEnd={handleDragEnd}
+                  className={cn(
+                    "p-3 rounded-md border bg-background/80 shadow-sm flex items-center justify-between",
+                    "hover:shadow-md transition-shadow duration-200",
+                    draggedItemId === task.id ? "opacity-40 ring-2 ring-primary ring-offset-2" : "cursor-grab",
+                    dragOverItemId === task.id && draggedItemId !== task.id && "ring-2 ring-accent ring-offset-1"
+                  )}
+                  style={{ touchAction: 'none' }} // Helps with some mobile drag conflicts
+                >
+                  {editingTask && editingTask.id === task.id ? (
+                    <div className="space-y-2 flex-grow">
+                      <Input
+                        value={editingTask.name}
+                        onChange={(e) => setEditingTask({ ...editingTask, name: e.target.value })}
+                        className="bg-background text-base sm:text-sm"
+                      />
+                      <Select value={editingTask.iconName} onValueChange={(value) => setEditingTask({...editingTask, iconName: value })}>
+                        <SelectTrigger className="w-full bg-background text-base sm:text-sm">
+                            <SelectValue placeholder="Select icon" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <ScrollArea className="h-[200px]">
+                          {availableIcons.map(icon => (
+                            <SelectItem key={icon} value={icon} className="text-sm">
+                              <div className="flex items-center">
+                                <LucideIconRenderer name={icon} className="w-4 h-4 mr-2" />
+                                {icon}
+                              </div>
+                            </SelectItem>
+                          ))}
+                          </ScrollArea>
+                        </SelectContent>
+                      </Select>
+                      <div className="flex justify-end space-x-2">
+                        <Button onClick={handleUpdateTask} size="sm" className="bg-primary hover:bg-primary/90 text-sm">
+                          <Save className="w-4 h-4 mr-1" /> Save
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => setEditingTask(null)} className="text-sm">Cancel</Button>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <LucideIconRenderer name={task.iconName} className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                      <span className="text-base sm:text-lg">{task.name}</span>
-                    </div>
-                    <div className="space-x-1 sm:space-x-2">
-                      <Button variant="ghost" size="icon" onClick={() => startEdit(task)} aria-label={`Edit ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
-                        <Pencil className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-primary" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} aria-label={`Delete ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
-                        <Trash2 className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-destructive" />
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-            {tasks.length === 0 && (
-              <p className="text-center text-muted-foreground py-4 text-sm sm:text-base">No habits added yet.</p>
-            )}
-          </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center space-x-3 flex-grow">
+                        <GripVertical className="h-5 w-5 text-muted-foreground shrink-0 cursor-grab" />
+                        <LucideIconRenderer name={task.iconName} className="w-5 h-5 sm:w-6 sm:h-6 text-primary shrink-0" />
+                        <span className="text-base sm:text-lg">{task.name}</span>
+                      </div>
+                      <div className="space-x-1 sm:space-x-2 shrink-0">
+                        <Button variant="ghost" size="icon" onClick={() => startEdit(task)} aria-label={`Edit ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
+                          <Pencil className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-primary" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} aria-label={`Delete ${task.name}`} className="h-8 w-8 sm:h-9 sm:w-9">
+                          <Trash2 className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-destructive" />
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+              {tasks.length === 0 && (
+                <p className="text-center text-muted-foreground py-4 text-sm sm:text-base">No habits added yet.</p>
+              )}
+            </div>
+          </ScrollArea>
         </div>
 
         <DialogFooter className="px-6 pb-6 pt-4 border-t shrink-0">
@@ -183,3 +236,5 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
     </Dialog>
   );
 };
+
+    
