@@ -115,9 +115,9 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
         </div>
 
         {/* Current Habits Section - This container will manage scrolling */}
-        <div className="flex-grow flex flex-col min-h-0 overflow-hidden">
+        <div className="flex-grow flex flex-col min-h-0 overflow-hidden"> {/* This container allows the ScrollArea to take up remaining space and scroll */}
           <h3 className="text-lg font-semibold mb-2 font-headline p-1 shrink-0">Current Habits</h3>
-          <ScrollArea className="flex-1 pr-3"> {/* ScrollArea uses flex-1 to take available space */}
+          <ScrollArea className="flex-1 pr-3"> {/* ScrollArea uses flex-1 to take available space within its parent */}
             <div className="space-y-3">
               {tasks.map((task) => (
                 <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
@@ -186,5 +186,4 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
     </Dialog>
   );
 };
-
     
