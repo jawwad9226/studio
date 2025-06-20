@@ -48,11 +48,19 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#64B5F6" />
-        <link rel="apple-touch-icon" href="https://placehold.co/apple-touch-icon.png" data-ai-hint="app icon" />
+        <link rel="apple-touch-icon" href="https://placehold.co/180x180.png" data-ai-hint="app icon" />
         {/* You would replace these with actual icon files in /public */}
         {/* <link rel="shortcut icon" href="/favicon.ico" /> */}
       </head>
       <body className="font-body antialiased">
         <HabitProvider>
           <Header />
-          <main className="flex-grow container mx-auto
+          <main className="flex-grow container mx-auto p-4 sm:p-6">
+            {children}
+          </main>
+          <Toaster />
+        </HabitProvider>
+      </body>
+    </html>
+  );
+}
