@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogC
 import { Pencil, Trash2, PlusCircle, Save } from 'lucide-react';
 import LucideIconRenderer from './icons/LucideIconRenderer';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ScrollArea } from '@/components/ui/scroll-area'; // We'll keep the import but use direct overflow for now
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
 const availableIcons = [
@@ -112,8 +112,8 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </div>
         </div>
 
-        {/* "Current Habits" title section */}
-        <div className="px-6 pt-4 shrink-0">
+        {/* "Current Habits" title section - fixed */}
+        <div className="px-6 pt-2 pb-2 shrink-0"> {/* Reduced pt-4 to pt-2 */}
           <h3 className="text-lg font-semibold font-headline">Current Habits</h3>
         </div>
 
@@ -162,7 +162,6 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                 ) : (
                   <>
                     <div className="flex items-center space-x-3 flex-grow">
-                      {/* <GripVertical className="h-5 w-5 text-muted-foreground shrink-0 cursor-grab" /> Re-add for drag-and-drop */}
                       <LucideIconRenderer name={task.iconName} className="w-5 h-5 sm:w-6 sm:h-6 text-primary shrink-0" />
                       <span className="text-base sm:text-lg">{task.name}</span>
                     </div>
@@ -193,3 +192,4 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
     </Dialog>
   );
 };
+
