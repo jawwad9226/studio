@@ -1,3 +1,4 @@
+
 'use client';
 
 import { HabitList } from '@/components/HabitList';
@@ -17,8 +18,12 @@ export default function HomePage() {
           <Skeleton className="h-48 w-full rounded-lg" />
           <Skeleton className="h-48 w-full rounded-lg" />
         </div>
+         {/* Skeleton for "SJAM Creates" */}
+        <Skeleton className="h-6 w-32 mx-auto rounded-lg" />
         {/* Skeleton for HabitList */}
         <Skeleton className="h-96 w-full rounded-lg" />
+         {/* Skeleton for "SJAM Creates" */}
+        <Skeleton className="h-6 w-32 mx-auto rounded-lg mt-8" />
       </div>
     );
   }
@@ -29,7 +34,9 @@ export default function HomePage() {
         <StreakDisplay />
         <MotivationalMessageCard />
       </div>
+      <p className="text-center text-xs text-muted-foreground">SJAM Creates</p>
       <HabitList />
+      <p className="text-center text-xs text-muted-foreground mt-4 pb-4">SJAM Creates</p>
     </div>
   );
 }

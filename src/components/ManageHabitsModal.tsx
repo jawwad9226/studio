@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
-import { Pencil, Trash2, PlusCircle, Save } from 'lucide-react';
+import { Pencil, Trash2, PlusCircle, Save, GripVertical } from 'lucide-react';
 import LucideIconRenderer from './icons/LucideIconRenderer';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -35,16 +35,22 @@ interface ManageHabitsModalProps {
 }
 
 export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, onClose }) => {
-  const { tasks, addTask, updateTask, deleteTask } = useHabits();
+  const { tasks, addTask, updateTask, deleteTask, reorderTasks } = useHabits();
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [newTaskName, setNewTaskName] = useState('');
   const [newTaskIcon, setNewTaskIcon] = useState(availableIcons[0]);
+
+  const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
+  const [dragOverItemId, setDragOverItemId] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (isOpen) {
       setNewTaskName('');
       setNewTaskIcon(availableIcons[0]);
       setEditingTask(null);
+      setDraggedItemId(null);
+      setDragOverItemId(null);
     }
   }, [isOpen]);
 
@@ -65,6 +71,38 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
   const startEdit = (task: Task) => {
     setEditingTask({ ...task });
   };
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, taskId: string) => {
+    setDraggedItemId(taskId);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, targetTaskId: string) => {
+    e.preventDefault();
+    if (draggedItemId && draggedItemId !== targetTaskId) {
+      setDragOverItemId(targetTaskId);
+    }
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, targetTaskId: string) => {
+    e.preventDefault();
+     if (draggedItemId && draggedItemId !== targetTaskId) {
+      setDragOverItemId(targetTaskId);
+    }
+  };
+  
+  const handleDragLeave = () => {
+    setDragOverItemId(null);
+  };
+
+  const handleDrop = (targetTaskId: string) => {
+    if (draggedItemId && draggedItemId !== targetTaskId) {
+      reorderTasks(draggedItemId, targetTaskId);
+    }
+    setDraggedItemId(null);
+    setDragOverItemId(null);
+  };
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -112,20 +150,26 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </div>
         </div>
 
-        {/* "Current Habits" title section - fixed */}
-        <div className="px-6 pt-2 pb-2 shrink-0"> {/* Reduced pt-4 to pt-2 */}
+        <div className="px-6 pt-2 pb-2 border-b shrink-0">
           <h3 className="text-lg font-semibold font-headline">Current Habits</h3>
         </div>
 
-        {/* Scrollable habit list container */}
         <div className="flex-1 min-h-0 overflow-y-auto px-6 pb-4">
-          <div className="space-y-3">
+          <div className="space-y-3 py-2">
             {tasks.map((task) => (
               <div 
-                key={task.id} 
+                key={task.id}
+                draggable={!editingTask} // Only draggable if not editing
+                onDragStart={(e) => !editingTask && handleDragStart(e, task.id)}
+                onDragOver={(e) => !editingTask && handleDragOver(e, task.id)}
+                onDragEnter={(e) => !editingTask && handleDragEnter(e, task.id)}
+                onDragLeave={!editingTask ? handleDragLeave : undefined}
+                onDrop={() => !editingTask && handleDrop(task.id)}
                 className={cn(
-                  "p-3 rounded-md border bg-background/80 shadow-sm flex items-center justify-between",
-                  "hover:shadow-md transition-shadow duration-200"
+                  "p-3 rounded-md border bg-background/80 shadow-sm flex items-center justify-between cursor-grab",
+                  "hover:shadow-md transition-shadow duration-200",
+                  draggedItemId === task.id && "opacity-50 ring-2 ring-primary",
+                  dragOverItemId === task.id && !editingTask && "ring-2 ring-accent ring-offset-2 ring-offset-card"
                 )}
               >
                 {editingTask && editingTask.id === task.id ? (
@@ -161,6 +205,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                   </div>
                 ) : (
                   <>
+                    {!editingTask && <GripVertical className="h-5 w-5 text-muted-foreground mr-2 shrink-0" />}
                     <div className="flex items-center space-x-3 flex-grow">
                       <LucideIconRenderer name={task.iconName} className="w-5 h-5 sm:w-6 sm:h-6 text-primary shrink-0" />
                       <span className="text-base sm:text-lg">{task.name}</span>
@@ -192,4 +237,3 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
     </Dialog>
   );
 };
-

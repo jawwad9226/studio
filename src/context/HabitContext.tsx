@@ -62,23 +62,22 @@ export const HabitProvider = ({ children }: { children: ReactNode }) => {
     return isDayCompleteUtil(date, habitLog, tasks || []);
   }, [habitLog, tasks]);
   
-  // Reorder tasks functionality removed for now to stabilize modal
-  // const reorderTasks = useCallback((sourceTaskId: string, targetTaskId: string) => {
-  //   setTasks(prevTasks => {
-  //     const currentTasks = Array.isArray(prevTasks) ? prevTasks : [];
-  //     const sourceIndex = currentTasks.findIndex(task => task.id === sourceTaskId);
-  //     const targetIndex = currentTasks.findIndex(task => task.id === targetTaskId);
+  const reorderTasks = useCallback((sourceTaskId: string, targetTaskId: string) => {
+    setTasks(prevTasks => {
+      const currentTasks = Array.isArray(prevTasks) ? prevTasks : [];
+      const sourceIndex = currentTasks.findIndex(task => task.id === sourceTaskId);
+      const targetIndex = currentTasks.findIndex(task => task.id === targetTaskId);
 
-  //     if (sourceIndex === -1 || targetIndex === -1 ) { 
-  //       return currentTasks;
-  //     }
+      if (sourceIndex === -1 || targetIndex === -1 || sourceIndex === targetIndex) { 
+        return currentTasks;
+      }
       
-  //     const updatedTasks = Array.from(currentTasks);
-  //     const [movedTask] = updatedTasks.splice(sourceIndex, 1);
-  //     updatedTasks.splice(targetIndex, 0, movedTask);
-  //     return updatedTasks;
-  //   });
-  // }, [setTasks]);
+      const updatedTasks = Array.from(currentTasks);
+      const [movedTask] = updatedTasks.splice(sourceIndex, 1);
+      updatedTasks.splice(targetIndex, 0, movedTask);
+      return updatedTasks;
+    });
+  }, [setTasks]);
 
   const getHistoricalDataForAI = useCallback((numberOfDays: number): boolean[][] => {
     if (isLoading || !tasks || tasks.length === 0) return [];
@@ -112,7 +111,7 @@ export const HabitProvider = ({ children }: { children: ReactNode }) => {
       getTaskCompletion,
       isDayComplete,
       isLoading,
-      // reorderTasks, // Temporarily removed
+      reorderTasks,
       getHistoricalDataForAI,
       getTodayCompletionStatusForAI
     }}>
