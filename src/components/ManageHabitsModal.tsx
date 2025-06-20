@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -70,12 +69,12 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[525px] bg-card text-card-foreground max-h-[80vh] flex flex-col">
-        <DialogHeader>
+        <DialogHeader className="shrink-0">
           <DialogTitle className="font-headline text-2xl">Manage Habits</DialogTitle>
         </DialogHeader>
         
-        <div className="py-4 flex-grow overflow-hidden flex flex-col min-h-0"> {/* Main content area */}
-          <div className="mb-6 p-1 shrink-0"> {/* Add New Habit section - shrink-0 prevents it from growing excessively */}
+        <div className="flex-grow py-4 flex flex-col min-h-0 overflow-hidden">
+          <div className="mb-6 p-1 shrink-0">
             <h3 className="text-lg font-semibold mb-2 font-headline">Add New Habit</h3>
             <div className="flex items-end space-x-2">
               <div className="flex-grow">
@@ -114,10 +113,9 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
             </div>
           </div>
 
-          {/* Wrapper for "Current Habits" title and ScrollArea */}
-          <div className="flex flex-col flex-grow min-h-0"> 
+          <div className="flex flex-col flex-grow min-h-0">
             <h3 className="text-lg font-semibold mb-2 font-headline p-1 shrink-0">Current Habits</h3>
-            <ScrollArea className="flex-grow pr-3 min-h-0"> {/* ScrollArea takes remaining space */}
+            <ScrollArea className="flex-grow pr-3 min-h-0"> 
               <div className="space-y-3">
                 {tasks.map((task) => (
                   <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
@@ -178,7 +176,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </div>
         </div>
 
-        <DialogFooter className="shrink-0"> {/* Footer - shrink-0 */}
+        <DialogFooter className="shrink-0">
           <DialogClose asChild>
             <Button variant="outline" onClick={onClose}>Close</Button>
           </DialogClose>

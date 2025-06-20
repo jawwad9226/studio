@@ -1,4 +1,14 @@
+
 import type {NextConfig} from 'next';
+// @ts-ignore
+import withPWAInit from 'next-pwa';
+
+const withPWA = withPWAInit({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -22,7 +32,3 @@ const nextConfig: NextConfig = {
     allowedDevOrigins: [
       'https://6000-firebase-studio-1750393313248.cluster-fdkw7vjj7bgguspe3fbbc25tra.cloudworkstations.dev',
     ],
-  },
-};
-
-export default nextConfig;
