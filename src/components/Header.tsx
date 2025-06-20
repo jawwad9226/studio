@@ -16,12 +16,12 @@ export default function Header() {
           Habitual Streak
         </Link>
         <nav className="flex items-center space-x-2 sm:space-x-4">
-          <Link href="/" legacyBehavior passHref>
+          <Link href="/">
             <Button variant="ghost" className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
               <Home className="h-5 w-5 sm:mr-2" /> <span className="hidden sm:inline">Home</span>
             </Button>
           </Link>
-          <Link href="/history" legacyBehavior passHref>
+          <Link href="/history">
             <Button variant="ghost" className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
               <History className="h-5 w-5 sm:mr-2" /> <span className="hidden sm:inline">History</span>
             </Button>
