@@ -73,7 +73,6 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           <DialogTitle className="font-headline text-xl sm:text-2xl">Manage Habits</DialogTitle>
         </DialogHeader>
         
-        {/* Add New Habit Section */}
         <div className="px-6 py-4 border-b shrink-0">
           <h3 className="text-lg font-semibold mb-2 font-headline">Add New Habit</h3>
           <div className="flex flex-col sm:flex-row sm:items-end space-y-2 sm:space-y-0 sm:space-x-2">
@@ -113,9 +112,9 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </div>
         </div>
 
-        {/* Current Habits Section - This section will grow and scroll */}
-        <div className="flex-1 px-6 py-4 min-h-0"> {/* This div grows; min-h-0 is crucial */}
-          <ScrollArea className="h-full w-full"> {/* ScrollArea fills this growing div */}
+        {/* This div is the key for scrolling */}
+        <div className="flex-1 px-6 py-4 min-h-0"> 
+          <ScrollArea className="h-full w-full"> 
             <h3 className="text-lg font-semibold mb-3 font-headline">Current Habits</h3>
             <div className="space-y-3">
               {tasks.map((task) => (
@@ -185,5 +184,4 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
     </Dialog>
   );
 };
-
     
