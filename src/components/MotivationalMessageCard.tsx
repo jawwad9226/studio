@@ -9,7 +9,7 @@ import { Skeleton } from './ui/skeleton';
 import { motivationalMessages } from '@/lib/motivationalMessages';
 
 export const MotivationalMessageCard: React.FC = () => {
-  const { tasks, isLoading: habitsLoading, currentStreak } = useHabits();
+  const { tasks, isLoading: habitsLoading } = useHabits();
   const [displayMessage, setDisplayMessage] = useState<string>("Loading motivation...");
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const MotivationalMessageCard: React.FC = () => {
       const randomIndex = Math.floor(Math.random() * motivationalMessages.length);
       setDisplayMessage(motivationalMessages[randomIndex]);
     }
-  }, [habitsLoading, tasks.length, currentStreak]);
+  }, [habitsLoading, tasks.length]);
 
 
   return (
