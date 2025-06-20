@@ -1,0 +1,182 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useHabits } from '@/context/HabitContext';
+import type { Task } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Pencil, Trash2, PlusCircle, Save } from 'lucide-react';
+import LucideIconRenderer from './icons/LucideIconRenderer';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+// A selection of commonly used Lucide icons appropriate for habits
+const availableIcons = [
+  "Activity", "Anchor", "Award", "Atom", "Bike", "BookOpenCheck", "Brain", "Briefcase", "Brush",
+  "CalendarCheck", "Camera", "CheckCircle2", "ClipboardCheck", "CloudSun", "Code2", "Coffee",
+  "Contact", "Crosshair", "DollarSign", "Dumbbell", "Edit3", "Feather", "Flag", "Gift", "Globe",
+  "Grab", "Grid", "Guitar", "Headphones", "Heart", "HelpCircle", "Home", "Image", "IterationCw",
+  "Languages", "Laptop2", "Leaf", "Library", "Lightbulb", "Link", "ListChecks", "Lock", "MapPin",
+  "Medal", "Mic2", "MoonStar", "MousePointer2", "Move", "Music2", "Palette", "Paperclip", "PenTool",
+  "Percent", "PersonStanding", "Phone", "PieChart", "PiggyBank", "Pilcrow", "Plane", "PlayCircle",
+  "Podcast", "Presentation", "Printer", "Puzzle", "Quote", "Repeat", "Rocket", "Save", "Scale",
+  "Scissors", "ScreenShare", "Send", "Settings2", "Share2", "Sheet", "ShieldCheck", "ShoppingBag",
+  "Smile", "Sparkles", "Speaker", "Star", "StickyNote", "Sun", "Sunrise", "Sunset", "Target",
+  "Tent", "Terminal", "ThumbsUp", "Timer", "ToggleRight", "Trash2", "TrendingUp", "Trophy",
+  "Umbrella", "Users2", "Video", "Wallet2", "Watch", "Wifi", "Wind", "Wrench", "Zap"
+];
+
+
+interface ManageHabitsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, onClose }) => {
+  const { tasks, addTask, updateTask, deleteTask } = useHabits();
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [newTaskName, setNewTaskName] = useState('');
+  const [newTaskIcon, setNewTaskIcon] = useState(availableIcons[0]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setNewTaskName('');
+      setNewTaskIcon(availableIcons[0]);
+      setEditingTask(null);
+    }
+  }, [isOpen]);
+
+  const handleAddTask = () => {
+    if (newTaskName.trim() === '') return;
+    addTask(newTaskName, newTaskIcon);
+    setNewTaskName('');
+    setNewTaskIcon(availableIcons[0]);
+  };
+
+  const handleUpdateTask = () => {
+    if (editingTask && editingTask.name.trim() !== '') {
+      updateTask(editingTask.id, editingTask.name, editingTask.iconName);
+      setEditingTask(null);
+    }
+  };
+
+  const startEdit = (task: Task) => {
+    setEditingTask({ ...task });
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[525px] bg-card text-card-foreground max-h-[80vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle className="font-headline text-2xl">Manage Habits</DialogTitle>
+        </DialogHeader>
+        
+        <div className="py-4 flex-grow overflow-hidden flex flex-col">
+          <div className="mb-6 p-1">
+            <h3 className="text-lg font-semibold mb-2 font-headline">Add New Habit</h3>
+            <div className="flex items-end space-x-2">
+              <div className="flex-grow">
+                <Label htmlFor="new-task-name">Habit Name</Label>
+                <Input
+                  id="new-task-name"
+                  value={newTaskName}
+                  onChange={(e) => setNewTaskName(e.target.value)}
+                  placeholder="e.g., Morning Exercise"
+                  className="bg-background"
+                />
+              </div>
+              <div>
+                <Label htmlFor="new-task-icon">Icon</Label>
+                 <Select value={newTaskIcon} onValueChange={setNewTaskIcon}>
+                  <SelectTrigger className="w-[180px] bg-background">
+                    <SelectValue placeholder="Select icon" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <ScrollArea className="h-[200px]">
+                    {availableIcons.map(icon => (
+                      <SelectItem key={icon} value={icon}>
+                        <div className="flex items-center">
+                          <LucideIconRenderer name={icon} className="w-4 h-4 mr-2" />
+                          {icon}
+                        </div>
+                      </SelectItem>
+                    ))}
+                    </ScrollArea>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={handleAddTask} size="icon" aria-label="Add habit" className="bg-primary hover:bg-primary/90">
+                <PlusCircle className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+
+          <h3 className="text-lg font-semibold mb-2 font-headline p-1">Current Habits</h3>
+          <ScrollArea className="flex-grow pr-3">
+            <div className="space-y-3">
+              {tasks.map((task) => (
+                <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
+                  {editingTask && editingTask.id === task.id ? (
+                    <div className="space-y-2">
+                      <Input
+                        value={editingTask.name}
+                        onChange={(e) => setEditingTask({ ...editingTask, name: e.target.value })}
+                        className="bg-background"
+                      />
+                       <Select value={editingTask.iconName} onValueChange={(value) => setEditingTask({...editingTask, iconName: value })}>
+                        <SelectTrigger className="w-full bg-background">
+                           <SelectValue placeholder="Select icon" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <ScrollArea className="h-[200px]">
+                          {availableIcons.map(icon => (
+                            <SelectItem key={icon} value={icon}>
+                              <div className="flex items-center">
+                                <LucideIconRenderer name={icon} className="w-4 h-4 mr-2" />
+                                {icon}
+                              </div>
+                            </SelectItem>
+                          ))}
+                          </ScrollArea>
+                        </SelectContent>
+                      </Select>
+                      <div className="flex justify-end space-x-2">
+                        <Button onClick={handleUpdateTask} size="sm" className="bg-primary hover:bg-primary/90">
+                          <Save className="w-4 h-4 mr-1" /> Save
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => setEditingTask(null)}>Cancel</Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <LucideIconRenderer name={task.iconName} className="w-6 h-6 text-primary" />
+                        <span className="text-base">{task.name}</span>
+                      </div>
+                      <div className="space-x-2">
+                        <Button variant="ghost" size="icon" onClick={() => startEdit(task)} aria-label={`Edit ${task.name}`}>
+                          <Pencil className="h-5 w-5 text-muted-foreground hover:text-primary" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} aria-label={`Delete ${task.name}`}>
+                          <Trash2 className="h-5 w-5 text-muted-foreground hover:text-destructive" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
+
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline" onClick={onClose}>Close</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
