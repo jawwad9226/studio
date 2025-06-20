@@ -1,4 +1,6 @@
+
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/generate-motivational-message.ts';
+// Removed import for '@/ai/flows/generate-motivational-message.ts';
+// as it's no longer used by the application.

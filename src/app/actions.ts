@@ -1,15 +1,11 @@
+
 'use server';
 
-import { generateMotivationalMessage } from '@/ai/flows/generate-motivational-message.ts';
-import type { MotivationalMessageInput, MotivationalMessageOutput } from '@/ai/flows/generate-motivational-message.ts';
+// Removed generateMotivationalMessage and related types as they are no longer used by the client.
+// If you need to re-introduce AI-powered motivational messages, 
+// you would re-import the flow and its types here.
 
-export async function getMotivationalMessageAction(input: MotivationalMessageInput): Promise<MotivationalMessageOutput> {
-  try {
-    const result = await generateMotivationalMessage(input);
-    return result;
-  } catch (error) {
-    console.error("Error generating motivational message:", error);
-    // Fallback message or rethrow, depending on how you want to handle errors client-side
-    return { message: "Keep pushing, you're doing great! Every step counts towards your goal." };
-  }
-}
+// Example of keeping the file structure if other actions are added later:
+// export async function someOtherAction(input: any): Promise<any> {
+//   // ...
+// }

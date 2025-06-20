@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHabits } from '@/context/HabitContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Lightbulb } from 'lucide-react';
@@ -14,7 +14,6 @@ export const MotivationalMessageCard: React.FC = () => {
 
   useEffect(() => {
     if (habitsLoading) {
-      // Skeleton will be shown, but we can set a placeholder
       setDisplayMessage("Analyzing your awesome progress...");
       return;
     }
@@ -26,7 +25,7 @@ export const MotivationalMessageCard: React.FC = () => {
       const randomIndex = Math.floor(Math.random() * motivationalMessages.length);
       setDisplayMessage(motivationalMessages[randomIndex]);
     }
-  }, [habitsLoading, tasks.length, currentStreak]); // Re-pick message if habits load, tasks change, or streak changes
+  }, [habitsLoading, tasks.length, currentStreak]);
 
 
   return (
