@@ -1,5 +1,6 @@
 
 import type {Metadata} from 'next';
+import Script from 'next/script'; // Import the Next.js Script component
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { HabitProvider } from '@/context/HabitContext';
@@ -49,24 +50,9 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#64B5F6" />
         <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
-        {/* You would replace these with actual icon files in /public */}
-        {/* <link rel="shortcut icon" href="/favicon.ico" /> */}
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body className="font-body antialiased">
-        {/* Service worker registration */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-              navigator.serviceWorker.register('/sw.js')
-                .then((reg) => {
-                  console.log('Service worker registered.', reg);
-                })
-                .catch((err) => {
-                  console.error('Service worker registration failed:', err);
-                });
-            });
-          }
-        `}} />
         <HabitProvider>
           <Header />
           <main className="flex-grow container mx-auto p-4 sm:p-6">
@@ -74,8 +60,22 @@ export default function RootLayout({
           </main>
           <Toaster />
         </HabitProvider>
+        <Script id="service-worker-registration" strategy="lazyOnload">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                  .then((reg) => {
+                    console.log('Service worker registered.', reg);
+                  })
+                  .catch((err) => {
+                    console.error('Service worker registration failed:', err);
+                  });
+              });
+            }
+          `}
+        </Script>
       </body>
     </html>
   );
 }
-
