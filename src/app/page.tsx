@@ -34,7 +34,7 @@ export default function HomePage() {
       </div>
       <HabitList />
       <a 
-        href="https://github.com/sjam" 
+        href="https://github.com/jawwad9226" 
         target="_blank" 
         rel="noopener noreferrer" 
         className="block text-center text-xs text-muted-foreground hover:text-primary transition-colors mt-4 pb-4"
