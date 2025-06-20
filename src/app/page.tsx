@@ -18,12 +18,10 @@ export default function HomePage() {
           <Skeleton className="h-48 w-full rounded-lg" />
           <Skeleton className="h-48 w-full rounded-lg" />
         </div>
-         {/* Skeleton for "SJAM Creates" */}
-        <Skeleton className="h-6 w-32 mx-auto rounded-lg" />
         {/* Skeleton for HabitList */}
-        <Skeleton className="h-96 w-full rounded-lg" />
-         {/* Skeleton for "SJAM Creates" */}
-        <Skeleton className="h-6 w-32 mx-auto rounded-lg mt-8" />
+        <Skeleton className="h-96 w-full rounded-lg mt-8" />
+         {/* Skeleton for "SJAM Creates" hyperlink */}
+        <Skeleton className="h-6 w-32 mx-auto mt-8" />
       </div>
     );
   }
@@ -34,9 +32,15 @@ export default function HomePage() {
         <StreakDisplay />
         <MotivationalMessageCard />
       </div>
-      <p className="text-center text-xs text-muted-foreground">SJAM Creates</p>
       <HabitList />
-      <p className="text-center text-xs text-muted-foreground mt-4 pb-4">SJAM Creates</p>
+      <a 
+        href="https://github.com/sjam" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="block text-center text-xs text-muted-foreground hover:text-primary transition-colors mt-4 pb-4"
+      >
+        SJAM Creates
+      </a>
     </div>
   );
 }

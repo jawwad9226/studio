@@ -1,8 +1,14 @@
+
 {
-  "name": "Habitual Streak",
-  "short_name": "HabitualStreak",
-  "description": "Track your daily habits and build streaks.",
+  "name": "Habitual Streak by SJAM Creates",
+  "short_name": "HabitStreak",
+  "description": "Track your daily habits and build streaks. An app by SJAM Creates.",
   "icons": [
+    {
+      "src": "/icons/icon-180x180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
@@ -16,9 +22,9 @@
       "purpose": "any maskable"
     }
   ],
-  "theme_color": "#64B5F6",
-  "background_color": "#E3F2FD",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait"
+  "background_color": "#E3F2FD",
+  "theme_color": "#64B5F6",
+  "orientation": "portrait-primary"
 }
