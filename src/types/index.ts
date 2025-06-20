@@ -22,9 +22,7 @@ export interface HabitContextType {
   getTaskCompletion: (taskId: string, date: string) => boolean;
   isDayComplete: (date: string) => boolean;
   isLoading: boolean;
-  reorderTasks: (sourceTaskId: string, targetTaskId: string) => void;
+  // reorderTasks: (sourceTaskId: string, targetTaskId: string) => void; // Temporarily removed
   getHistoricalDataForAI: (numberOfDays: number) => boolean[][];
   getTodayCompletionStatusForAI: () => boolean[];
 }
-
-    
