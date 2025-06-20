@@ -71,12 +71,12 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[525px] bg-card text-card-foreground max-h-[80vh] flex flex-col">
         <DialogHeader className="shrink-0">
-          <DialogTitle className="font-headline text-2xl">Manage Habits</DialogTitle>
+          <DialogTitle className="font-headline text-xl sm:text-2xl">Manage Habits</DialogTitle>
         </DialogHeader>
         
-        <div className="mb-6 p-1 shrink-0">
+        <div className="mb-4 p-1 shrink-0">
           <h3 className="text-lg font-semibold mb-2 font-headline">Add New Habit</h3>
-          <div className="flex items-end space-x-2">
+          <div className="flex flex-col sm:flex-row sm:items-end space-y-2 sm:space-y-0 sm:space-x-2">
             <div className="flex-grow">
               <Label htmlFor="new-task-name">Habit Name</Label>
               <Input
@@ -87,10 +87,10 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                 className="bg-background"
               />
             </div>
-            <div>
+            <div className="w-full sm:w-[180px]">
               <Label htmlFor="new-task-icon">Icon</Label>
                 <Select value={newTaskIcon} onValueChange={setNewTaskIcon}>
-                <SelectTrigger className="w-[180px] bg-background">
+                <SelectTrigger className="w-full bg-background">
                   <SelectValue placeholder="Select icon" />
                 </SelectTrigger>
                 <SelectContent>
@@ -107,16 +107,17 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleAddTask} size="icon" aria-label="Add habit" className="bg-primary hover:bg-primary/90">
+            <Button onClick={handleAddTask} size="icon" aria-label="Add habit" className="bg-primary hover:bg-primary/90 shrink-0 self-end sm:self-auto">
               <PlusCircle className="h-5 w-5" />
             </Button>
           </div>
         </div>
 
-        <div className="flex-grow flex flex-col min-h-0 overflow-hidden">
+        {/* Current Habits Section - This part scrolls */}
+        <div className="flex-grow flex flex-col min-h-0">
           <h3 className="text-lg font-semibold mb-2 font-headline p-1 shrink-0">Current Habits</h3>
-          <ScrollArea className="flex-1 pr-3">
-            <div className="space-y-3">
+          <ScrollArea className="flex-1 pr-1"> {/* Ensure ScrollArea can grow */}
+            <div className="space-y-3 p-1">
               {tasks.map((task) => (
                 <div key={task.id} className="p-3 rounded-md border bg-background/80 shadow-sm">
                   {editingTask && editingTask.id === task.id ? (
@@ -126,7 +127,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
                         onChange={(e) => setEditingTask({ ...editingTask, name: e.target.value })}
                         className="bg-background"
                       />
-                        <Select value={editingTask.iconName} onValueChange={(value) => setEditingTask({...editingTask, iconName: value })}>
+                      <Select value={editingTask.iconName} onValueChange={(value) => setEditingTask({...editingTask, iconName: value })}>
                         <SelectTrigger className="w-full bg-background">
                             <SelectValue placeholder="Select icon" />
                         </SelectTrigger>
@@ -175,7 +176,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
           </ScrollArea>
         </div>
 
-        <DialogFooter className="shrink-0">
+        <DialogFooter className="shrink-0 mt-4">
           <DialogClose asChild>
             <Button variant="outline" onClick={onClose}>Close</Button>
           </DialogClose>

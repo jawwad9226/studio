@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -15,7 +16,7 @@ export const HabitList: React.FC = () => {
     return (
       <Card className="w-full shadow-lg">
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">
+          <CardTitle className="font-headline text-xl sm:text-2xl">
              <Skeleton className="h-8 w-48" />
           </CardTitle>
         </CardHeader>
@@ -40,7 +41,7 @@ export const HabitList: React.FC = () => {
     return (
       <Card className="w-full shadow-lg">
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">Today&apos;s Habits - {getFormattedDate(today)}</CardTitle>
+          <CardTitle className="font-headline text-xl sm:text-2xl">Today&apos;s Habits - {getFormattedDate(today)}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-center text-muted-foreground py-8">
@@ -54,7 +55,7 @@ export const HabitList: React.FC = () => {
   return (
     <Card className="w-full shadow-lg backdrop-blur-sm bg-card/80">
       <CardHeader>
-        <CardTitle className="font-headline text-2xl">Today&apos;s Habits - <span className="text-primary">{getFormattedDate(today)}</span></CardTitle>
+        <CardTitle className="font-headline text-xl sm:text-2xl">Today&apos;s Habits - <span className="text-primary">{getFormattedDate(today)}</span></CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">

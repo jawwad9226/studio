@@ -25,14 +25,14 @@ export const MotivationalMessageCard: React.FC = () => {
       const randomIndex = Math.floor(Math.random() * motivationalMessages.length);
       setDisplayMessage(motivationalMessages[randomIndex]);
     }
-  }, [habitsLoading, tasks.length]); // Removed currentStreak from dependencies
+  }, [habitsLoading, tasks.length]);
 
 
   return (
     <Card className="shadow-lg backdrop-blur-sm bg-card/80">
       <CardHeader>
-        <CardTitle className="font-headline text-xl flex items-center">
-          <Lightbulb className="w-6 h-6 mr-2 text-primary" />
+        <CardTitle className="font-headline text-lg sm:text-xl flex items-center">
+          <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-primary" />
           Daily Motivation
         </CardTitle>
       </CardHeader>
@@ -44,7 +44,7 @@ export const MotivationalMessageCard: React.FC = () => {
             <Skeleton className="h-4 w-4/6 mx-auto" />
           </div>
         ) : (
-          <p className="text-lg italic text-foreground/90 leading-relaxed">&quot;{displayMessage}&quot;</p>
+          <p className="text-base sm:text-lg italic text-foreground/90 leading-relaxed">&quot;{displayMessage}&quot;</p>
         )}
       </CardContent>
     </Card>

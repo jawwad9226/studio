@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -12,21 +13,21 @@ export default function Header() {
   return (
     <header className="bg-primary text-primary-foreground shadow-md">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold font-headline hover:opacity-90 transition-opacity">
+        <Link href="/" className="text-xl sm:text-2xl font-bold font-headline hover:opacity-90 transition-opacity">
           Habitual Streak
         </Link>
-        <nav className="flex items-center space-x-2 sm:space-x-4">
+        <nav className="flex items-center space-x-1 sm:space-x-2">
           <Link href="/">
-            <Button variant="ghost" className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
+            <Button variant="ghost" className="text-primary-foreground hover:bg-primary/80 p-2 sm:px-3">
               <Home className="h-5 w-5 sm:mr-2" /> <span className="hidden sm:inline">Home</span>
             </Button>
           </Link>
           <Link href="/history">
-            <Button variant="ghost" className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
+            <Button variant="ghost" className="text-primary-foreground hover:bg-primary/80 p-2 sm:px-3">
               <History className="h-5 w-5 sm:mr-2" /> <span className="hidden sm:inline">History</span>
             </Button>
           </Link>
-          <Button variant="ghost" onClick={() => setIsModalOpen(true)} className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
+          <Button variant="ghost" onClick={() => setIsModalOpen(true)} className="text-primary-foreground hover:bg-primary/80 p-2 sm:px-3">
             <Settings className="h-5 w-5 sm:mr-2" /> <span className="hidden sm:inline">Manage Habits</span>
           </Button>
         </nav>

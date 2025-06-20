@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -28,7 +29,7 @@ export const StreakDisplay: React.FC = () => {
     return (
        <Card className="shadow-lg backdrop-blur-sm bg-card/80">
         <CardHeader>
-          <CardTitle className="font-headline text-xl flex items-center">
+          <CardTitle className="font-headline text-lg sm:text-xl flex items-center">
             <Skeleton className="h-7 w-32" />
           </CardTitle>
         </CardHeader>
@@ -50,13 +51,13 @@ export const StreakDisplay: React.FC = () => {
   return (
     <Card className={cn("shadow-lg backdrop-blur-sm bg-card/80", animated && "animate-pulse-once")}>
       <CardHeader>
-        <CardTitle className="font-headline text-xl flex items-center">
-          <Flame className="w-6 h-6 mr-2 text-primary" />
+        <CardTitle className="font-headline text-lg sm:text-xl flex items-center">
+          <Flame className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-primary" />
           Current Streak
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-center space-x-2 mb-3">
+        <div className="flex items-center justify-center space-x-1 sm:space-x-2 mb-3">
           {Array.from({ length: MAX_DISPLAY_DAYS }).map((_, index) => {
             const dayInCycle = currentStreak % MAX_DISPLAY_DAYS === 0 && currentStreak > 0 ? MAX_DISPLAY_DAYS : currentStreak % MAX_DISPLAY_DAYS;
             const isActive = index < dayInCycle;
@@ -64,7 +65,7 @@ export const StreakDisplay: React.FC = () => {
               <div
                 key={index}
                 className={cn(
-                  "h-3 sm:h-4 w-3 sm:w-4 rounded-full transition-all duration-300",
+                  "h-2 w-2 sm:h-3 sm:w-3 rounded-full transition-all duration-300",
                   isActive ? 'bg-accent' : 'bg-muted',
                   animated && isActive && index === dayInCycle -1 && "animate-ping opacity-75"
                 )}
@@ -76,19 +77,19 @@ export const StreakDisplay: React.FC = () => {
         </div>
 
         <div className="text-center">
-          <p className="text-4xl font-bold text-primary font-headline">
+          <p className="text-3xl sm:text-4xl font-bold text-primary font-headline">
             {currentStreak} Day{currentStreak === 1 ? '' : 's'}
           </p>
           {currentStreak > 0 && (
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
               {currentStreak >= MAX_DISPLAY_DAYS 
                 ? `${daysRemaining === MAX_DISPLAY_DAYS ? `Starting new ${MAX_DISPLAY_DAYS}-day cycle!` : `${daysRemaining} day${daysRemaining === 1 ? '' : 's'} to next ${MAX_DISPLAY_DAYS}-day cycle!`}`
                 : `${daysRemaining} day${daysRemaining === 1 ? '' : 's'} to complete ${MAX_DISPLAY_DAYS}-day cycle!`}
             </p>
           )}
            {completedCycles > 0 && (
-            <p className="text-sm text-accent font-semibold mt-1 flex items-center justify-center">
-              <Zap className="w-4 h-4 mr-1" />
+            <p className="text-xs sm:text-sm text-accent font-semibold mt-1 flex items-center justify-center">
+              <Zap className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               {completedCycles} cycle{completedCycles === 1 ? '' : 's'} completed!
             </p>
           )}

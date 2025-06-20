@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useMemo } from 'react';
@@ -58,7 +59,7 @@ export const HistoryCalendar: React.FC = () => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <Card className="md:col-span-2 shadow-lg backdrop-blur-sm bg-card/80">
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">Habit History Calendar</CardTitle>
+          <CardTitle className="font-headline text-xl sm:text-2xl">Habit History Calendar</CardTitle>
         </CardHeader>
         <CardContent className="flex justify-center">
           <Calendar
@@ -83,7 +84,7 @@ export const HistoryCalendar: React.FC = () => {
 
       <Card className="shadow-lg backdrop-blur-sm bg-card/80">
         <CardHeader>
-          <CardTitle className="font-headline text-xl">
+          <CardTitle className="font-headline text-lg sm:text-xl">
             {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : 'Select a date'}
           </CardTitle>
         </CardHeader>
@@ -97,14 +98,14 @@ export const HistoryCalendar: React.FC = () => {
                  <Badge variant="destructive" className="mb-3">Not all habits completed</Badge>
               )}
               {!habitLog[selectedDateString] && (
-                <p className="text-muted-foreground">No habits tracked for this day.</p>
+                <p className="text-muted-foreground text-sm">No habits tracked for this day.</p>
               )}
 
               {habitLog[selectedDateString] && (
                 <>
                   {completedTasksForSelectedDate.length > 0 && (
                     <div className="mb-4">
-                      <h4 className="font-semibold text-primary mb-2">Completed:</h4>
+                      <h4 className="font-semibold text-primary mb-2 text-sm">Completed:</h4>
                       <ul className="space-y-1.5">
                         {completedTasksForSelectedDate.map(task => (
                           <li key={task.id} className="flex items-center text-sm text-foreground">
@@ -117,7 +118,7 @@ export const HistoryCalendar: React.FC = () => {
                   )}
                   {incompleteTasksForSelectedDate.length > 0 && (
                      <div>
-                      <h4 className="font-semibold text-destructive mb-2">Incomplete:</h4>
+                      <h4 className="font-semibold text-destructive mb-2 text-sm">Incomplete:</h4>
                       <ul className="space-y-1.5">
                         {incompleteTasksForSelectedDate.map(task => (
                           <li key={task.id} className="flex items-center text-sm text-muted-foreground">
@@ -132,9 +133,9 @@ export const HistoryCalendar: React.FC = () => {
               )}
             </ScrollArea>
           ) : tasks.length === 0 ? (
-             <p className="text-muted-foreground">No habits configured.</p>
+             <p className="text-muted-foreground text-sm">No habits configured.</p>
           ) : (
-            <p className="text-muted-foreground">Select a date to see details.</p>
+            <p className="text-muted-foreground text-sm">Select a date to see details.</p>
           )}
         </CardContent>
       </Card>

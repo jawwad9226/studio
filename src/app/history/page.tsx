@@ -1,3 +1,4 @@
+
 'use client';
 
 import { HistoryCalendar } from '@/components/HistoryCalendar';
@@ -21,7 +22,7 @@ export default function HistoryPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold font-headline text-primary">Your Habit Journey</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold font-headline text-primary">Your Habit Journey</h1>
       <HistoryCalendar />
     </div>
   );
