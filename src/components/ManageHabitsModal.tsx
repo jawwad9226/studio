@@ -113,7 +113,7 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
         </div>
 
         {/* Scrollable Area Wrapper */}
-        <div className="flex-1 min-h-0"> {/* NO PADDING HERE */}
+        <div className="flex-1 min-h-0"> {/* THIS DIV IS KEY */}
           <ScrollArea className="h-full w-full"> 
             <div className="px-6 py-4"> {/* PADDING MOVED HERE, INSIDE SCROLLAREA'S CHILD */}
               <h3 className="text-lg font-semibold mb-3 font-headline">Current Habits</h3>
@@ -186,4 +186,6 @@ export const ManageHabitsModal: React.FC<ManageHabitsModalProps> = ({ isOpen, on
     </Dialog>
   );
 };
+    
+
     
